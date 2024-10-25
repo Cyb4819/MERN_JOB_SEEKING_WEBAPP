@@ -19,7 +19,7 @@ export const register = catchAsyncErrors(async (req, res, next) => {
     password,
     role,
   });
-  sendToken(user, 201, res, "User Registered!");
+  sendToken(user, 201, res, "User Registered Successfully!");
 });
 
 export const login = catchAsyncErrors(async (req, res, next) => {
@@ -44,18 +44,11 @@ export const login = catchAsyncErrors(async (req, res, next) => {
 });
 
 export const logout = catchAsyncErrors(async (req, res, next) => {
-  res
-    .status(201)
-    .cookie("token", "", {
-      httpOnly: true,
-      expires: new Date(Date.now()),
-      secure: true,
-    sameSite: "None",
-    })
-    .json({
-      success: true,
-      message: "Logged Out Successfully.",
-    });
+  res.clearCookie('token'); // Clear the token cookie
+  res.status(200).json({
+    success: true,
+    message: 'Logged out successfully'
+  });
 });
 
 

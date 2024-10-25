@@ -34,6 +34,12 @@ app.use(
     tempFileDir: "/tmp/",
   })
 );
+
+// Define routes
+app.get('/', (req, res) => {
+  res.send('Welcome to the API!');  // Root route
+});
+
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/job", jobRouter);
 app.use("/api/v1/application", applicationRouter);
