@@ -147,7 +147,10 @@ const JobSeekerCard = ({ element, deleteApplication, openModal }) => {
             alt="resume"
             onClick={() => openModal(element.resume.url)}
           />
-        </div>
+        </div>  
+          <p>
+            <span>Status:</span> {element.status}
+          </p>
         <div className="btn_area">
           <button onClick={() => deleteApplication(element._id)}>
             Delete Application
@@ -159,6 +162,22 @@ const JobSeekerCard = ({ element, deleteApplication, openModal }) => {
 };
 
 const EmployerCard = ({ element, openModal }) => {
+  const [status, setStatus] = useState(element.status);
+  
+  const handleStatusChange = async (newStatus) => {
+    try {
+      await axios.put(
+        `http://localhost:3000/api/v1/application/update-status/${element._id}`,
+        { status: newStatus },
+        { withCredentials: true }
+      );
+      setStatus(newStatus);
+      toast.success(`Application ${newStatus.toLowerCase()}`);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+  
   return (
     <>
       <div className="job_seeker_card">
@@ -185,6 +204,23 @@ const EmployerCard = ({ element, openModal }) => {
             alt="resume"
             onClick={() => openModal(element.resume.url)}
           />
+          <p>
+            <span>Status:</span> {status}
+          </p>
+          <div className="btn_area">
+        <button 
+          className={status === "Hired" ? "Hired" : ""}
+          onClick={() => handleStatusChange("Hired")}
+        >
+          Select
+        </button>
+        <button 
+          className={status === "Rejected" ? "rejected" : ""}
+          onClick={() => handleStatusChange("Rejected")}
+        >
+          Reject
+        </button>
+      </div>
         </div>
       </div>
     </>

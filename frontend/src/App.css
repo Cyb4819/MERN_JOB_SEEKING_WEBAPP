@@ -1344,12 +1344,114 @@ nav .hamburger {
   max-width: 550px;
   height: auto;
 }
+
 @media (max-width: 1130px) {
   .resume-modal {
     z-index: 11;
   }
 }
 
+/* Status display */
+.status {
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.status.under-review {
+  background-color: #f0f0f0;
+  color: #666;
+}
+
+.status.hired {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status.rejected {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+/* Status buttons */
+.btn_area {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.btn_area button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn_area button:hover {
+  opacity: 0.9;
+}
+
+.btn_area button.hired {
+  background-color: #4caf50;
+  color: white;
+}
+
+.btn_area button.rejected {
+  background-color: #f44336;
+  color: white;
+}
+
+/* Application list in JobDetails */
+.applications {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+}
+
+.application {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+  margin: 10px 0;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.application button {
+  padding: 6px 12px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.application button:first-of-type {
+  background-color: #4caf50;
+  color: white;
+}
+
+.application button:last-of-type {
+  background-color: #f44336;
+  color: white;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .application {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .application button {
+    margin: 5px 0;
+    width: 100%;
+  }
+}
 body {
   -webkit-user-select: none;
   -moz-user-select: none;

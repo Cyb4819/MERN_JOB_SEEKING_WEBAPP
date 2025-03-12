@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
 import { Toaster } from "react-hot-toast";
+import ChatbotInterface from "./components/ChatbotInterface";
 import axios from "axios";
 import Navbar from "./components/Layout/Navbar";
 import Footer from "./components/Layout/Footer";
@@ -55,6 +56,7 @@ const App = () => {
         </Routes>
         <Footer />
         <Toaster />
+        <ChatbotInterface /> {/* Render the ChatbotInterface */}
       </BrowserRouter>
     </>
   );

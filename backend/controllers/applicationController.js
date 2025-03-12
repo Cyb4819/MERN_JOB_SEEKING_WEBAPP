@@ -136,3 +136,26 @@ export const jobseekerDeleteApplication = catchAsyncErrors(
     });
   }
 );
+export const updateApplicationStatus = catchAsyncErrors(async (req, res, next) => {
+  const { role } = req.user;
+  if (role !== "Employer") {
+    return next(new ErrorHandler("Only employers can update application status", 403));
+  }
+
+  const { id } = req.params;
+  const { status } = req.body;
+
+  const application = await Application.findById(id);
+  if (!application) {
+    return next(new ErrorHandler("Application not found", 404));
+  }
+
+  application.status = status;
+  await application.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Application status updated",
+    application
+  });
+});
