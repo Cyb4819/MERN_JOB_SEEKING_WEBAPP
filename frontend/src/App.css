@@ -791,6 +791,7 @@ p {
   display: flex;
   flex-direction: column;
   gap: 5px;
+  padding-right: 5rem;
 }
 .job_seeker_card .detail {
   flex: 2;
@@ -809,16 +810,19 @@ p {
 }
 .job_seeker_card .resume img {
   width: auto;
-  height: 100%;
+  height: 80%;
   position: absolute;
-  top: 0;
+  top: 3rem;
   left: 0;
+  cursor: pointer;
 }
 .job_seeker_card .btn_area {
   flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin-left: 10rem;
 }
 .job_seeker_card .btn_area button {
   background: #d9534f;
@@ -1395,11 +1399,6 @@ nav .hamburger {
 
 .btn_area button.hired {
   background-color: #4caf50;
-  color: white;
-}
-
-.btn_area button.rejected {
-  background-color: #f44336;
   color: white;
 }
 

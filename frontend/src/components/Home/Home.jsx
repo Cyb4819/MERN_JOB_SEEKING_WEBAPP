@@ -6,7 +6,7 @@ import HeroSection from './HeroSection';
 import HowItWorks from './HowItWorks';
 import PopularCategories from './PopularCategories';
 import PopularCompanies from './PopularCompanies';
-import Loader from '../Loader/Loader';
+import Loader from '../Loader/Loader.jsx';
 
 const Home = () => {
   const { isAuthorized } = useContext(Context);
@@ -16,7 +16,7 @@ const Home = () => {
     // Simulate a delay to demonstrate the loader
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 4000);
+    }, 2000);
     return () => clearTimeout(timer);
   }, []);
 
