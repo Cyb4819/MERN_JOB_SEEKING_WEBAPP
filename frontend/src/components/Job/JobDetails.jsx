@@ -84,22 +84,23 @@ const JobDetails = () => {
         </div>
         <div className="banner">
           <p>
-            Title: <span> {job.title}</span>
+            Position: <span> {job.title}</span>
           </p>
           <p>
-            Category: <span>{job.category}</span>
-          </p>
-          <p>
-            Country: <span>{job.country}</span>
-          </p>
-          <p>
-            City: <span>{job.city}</span>
+            Role: <span>{job.category}</span>
           </p>
           <p>
             Location: <span>{job.location}</span>
           </p>
+          <p>Qualification: <span>{job.qualification}</span></p>
+          <p>
+            Time Period: <span>{job.timeperiod}</span>
+          </p>
           <p>
             Description: <span>{job.description}</span>
+          </p>
+          <p>
+            Vacancies: <span>{job.vacancy}</span>
           </p>
           <p>
             Job Posted On: <span>{job.jobPostedOn}</span>

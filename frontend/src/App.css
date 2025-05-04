@@ -609,8 +609,8 @@ p {
 .jobs .container .banner .card {
   background: #fff;
   text-decoration: none;
-  width: 320px;
-  height: 220px;
+  width: 20%;
+  height: 40%px;
   padding: 20px 20px;
   display: flex;
   flex-direction: column;
@@ -676,17 +676,22 @@ p {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  border: 2px solid black;
+  border: 0 solid black;
   padding: 10px 20px;
   border-radius: 30px;
   background: white;
 }
 .jobDetail .container .banner {
-  padding: 50px 0;
+  width: 100%;
+  background: white;
+  border-radius: 30px;
+  margin: 30px 10px 20px 20px;
+  padding: 13px 14px;
   display: flex;
   flex-direction: column;
   gap: 25px;
   justify-content: center;
+  margin-left: 1.6rem
 }
 .jobDetail .container .banner p {
   font-weight: bold;
@@ -697,7 +702,7 @@ p {
   font-weight: 400;
 }
 .jobDetail .container .banner a {
-  background-color: #11ce21;
+  background-color: #2d5649;
   color: rgb(233, 249, 255);
   font-size: 20px;
   font-weight: 400;
@@ -1205,15 +1210,14 @@ nav {
   padding: 0 20px;
 }
 nav .container {
-  max-width: 1500px;
-  min-width: 1500px;
-  margin: 0 auto;
+  width: 100%;
   display: flex;
+  font-size: 20px;
   justify-content: space-between;
 }
 nav .container .logo {
-  width: 120px;
-  height: 120px;
+  width: 80px;
+  height: 80px;
 }
 nav .container .logo img {
   width: 100%;
@@ -1227,10 +1231,10 @@ nav .menu {
 nav .menu button {
   height: fit-content;
   padding: 7px;
-  border: 1px solid #f1f3f6;
+  border-radius: 30px ;
   color: #f1f3f6;
   background: transparent;
-  font-size: 20px;
+  font-size: 15px;
   font-weight: 300;
 }
 nav .menu button:hover {
@@ -1245,7 +1249,7 @@ nav .menu li a {
   color: #f1f3f6;
   text-decoration: none;
   font-weight: 300;
-  font-size: 20px;
+  font-size: 15px;
   position: relative;
 }
 nav .menu li a:hover {

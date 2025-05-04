@@ -23,13 +23,15 @@ const jobSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please provide a category."],
   },
-  country: {
-    type: String,
-    required: [true, "Please provide a country name."],
+  vacancy: {
+    type: Number,
+    required: [true, "Please provide No oF Vacant Seats."],
+    minLength:[1000000, "Vacantposition seats should be at least 1 "]
   },
-  city: {
+  qualification: {
     type: String,
-    required: [true, "Please provide a city name."],
+    required: [true, "Please enter qualification."],
+    minLength: [10, "Must contain atleast 10 character"],
   },
   location: {
     type: String,
@@ -37,9 +39,13 @@ const jobSchema = new mongoose.Schema({
     minLength: [20, "Location must contian at least 20 characters!"],
   },
   fixedSalary: {
-    type: Number,
-    minLength: [4, "Salary must contain at least 4 digits"],
+    type: String,
+    minLength: [4, "Salary must contain at least 4 digits/ any word that contain 4 words"],
     maxLength: [9, "Salary cannot exceed 9 digits"],
+  },
+  timeperiod:{
+    type: String,
+    required:[true,"Enter time period of the job"],
   },
   salaryFrom: {
     type: Number,
