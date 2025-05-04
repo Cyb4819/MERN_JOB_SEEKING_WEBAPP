@@ -27,7 +27,7 @@ const JobDetails = () => {
 
     if (user && user.role === "Employer") {
       axios
-        .get(`http://localhost:3000/api/v1/application/job/${id}`, {
+        .get(`http://localhost:3000/api/v1/application/employer/getall`, {
           withCredentials: true,
         })
         .then((res) => setApplications(res.data.applications))
@@ -42,7 +42,7 @@ const JobDetails = () => {
         { status },
         { withCredentials: true }
       );
-      setApplications(prev => prev.map(app => 
+      setApplications(prev => prev.map(app =>
         app._id === applicationId ? { ...app, status } : app
       ));
       toast.success(`Application ${status.toLowerCase()}`);
@@ -51,14 +51,37 @@ const JobDetails = () => {
     }
   };
 
-  if (!isAuthorized) {
-    navigateTo("/login");
-  }
+  useEffect(() => {
+    if (!isAuthorized) {
+      navigateTo("/login");
+    }
+  }, [navigateTo])
 
   return (
     <section className="jobDetail page">
       <div className="container">
-        <h3>Job Details</h3>
+        <div class="job-detail-header">
+          <div className="job-details-name">
+            <div className="job-name">
+              <h1>{job.category}</h1>
+            </div>
+            <div className="job-details-logo">
+              <div className="job-detail-logo-desc">
+                <div>
+                  <i class="fa-solid fa-building"></i>
+                  <span>  google{job.companyname}</span>
+                </div>
+                <div>
+                  <i class="fa-solid fa-location-dot"></i>
+                  <span>  {job.location}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="apply-job-button">
+            <Link to={`/application/${job._id}`}><button>Apply</button></Link>
+          </div>
+        </div>
         <div className="banner">
           <p>
             Title: <span> {job.title}</span>

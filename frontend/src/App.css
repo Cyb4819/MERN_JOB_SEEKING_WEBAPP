@@ -666,16 +666,22 @@ p {
   padding: 50px 20px;
 }
 .jobDetail .container {
-  max-width: 1500px;
-  min-width: 1500px;
+  width: 90%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-.jobDetail .container .banner {
+.job-detail-header {
   width: 100%;
-  min-height: 767px;
+  display: flex;
+  justify-content: space-between;
+  border: 2px solid black;
+  padding: 10px 20px;
+  border-radius: 30px;
+  background: white;
+}
+.jobDetail .container .banner {
   padding: 50px 0;
   display: flex;
   flex-direction: column;
@@ -691,7 +697,7 @@ p {
   font-weight: 400;
 }
 .jobDetail .container .banner a {
-  background-color: #2d5649;
+  background-color: #11ce21;
   color: rgb(233, 249, 255);
   font-size: 20px;
   font-weight: 400;
@@ -701,10 +707,52 @@ p {
   margin-top: 10px;
   width: fit-content;
 }
+.job-details-name {
+  margin-right: auto;
+}
+.job-details-logo{
+  margin: 0px 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.job-detail-logo-desc{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.job-detail-logo-desc > div {
+  display: flex;
+  align-items: center;
+}
+i{
+  font-size: 30px;
+}
+.job-detail-logo-desc span {
+  margin: 0px 5px 0px 3px;
+}
+.apply-job-button{
+  
+  padding: 10px 20px 10px 20px;
+  top: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.apply-job-button button{
+  border-radius: 30px;
+  background-color: #2d5649;
+  color: rgb(233, 249, 255);
+  font-size: 20px;
+  font-weight: 500;
+  border: black;
+  padding: 10px 30px;
+  text-decoration: none;
+  width: 100%;
+}
 @media (max-width: 1520px) {
-  .jobDetail .container {
-    min-width: 100%;
-  }
+
 }
 .application {
   display: flex;
