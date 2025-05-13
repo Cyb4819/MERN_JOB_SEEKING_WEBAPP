@@ -79,7 +79,7 @@ const JobDetails = () => {
             </div>
           </div>
           <div class="apply-job-button">
-            <Link to={`/application/${job._id}`}><button>Apply</button></Link>
+            {(user.role === 'Job Seeker') && <Link to={`/application/${job._id}`}><button>Apply</button></Link>}
           </div>
         </div>
         <div className="banner">
@@ -94,7 +94,7 @@ const JobDetails = () => {
           </p>
           <p>Qualification: <span>{job.qualification}</span></p>
           <p>
-            Time Period: <span>{job.timeperiod}</span>
+            Time Period: <span>{job.timePeriod}</span>
           </p>
           <p>
             Description: <span>{job.description}</span>
@@ -115,7 +115,7 @@ const JobDetails = () => {
               </span>
             )}
           </p>
-          {user && user.role === "Employer" ? (
+          {/*user && user.role == "Employer" && (
             <div className="applications">
               <h4>Applications</h4>
               {applications.length > 0 ? (
@@ -135,9 +135,7 @@ const JobDetails = () => {
                 <p>No applications yet</p>
               )}
             </div>
-          ) : (
-            <Link to={`/application/${job._id}`}>Apply Now</Link>
-          )}
+          )*/}
         </div>
       </div>
     </section>

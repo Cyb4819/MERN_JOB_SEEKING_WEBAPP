@@ -755,6 +755,7 @@ i{
   padding: 10px 30px;
   text-decoration: none;
   width: 100%;
+  cursor: pointer;
 }
 @media (max-width: 1520px) {
 
@@ -1008,6 +1009,7 @@ i{
   text-transform: uppercase;
   font-weight: 600;
   letter-spacing: 2px;
+  cursor: pointer;
 }
 @media (max-width: 1520px) {
   .job_post .container {
@@ -1141,6 +1143,7 @@ i{
   padding: 7px;
   border: none;
   background: #ffc107;
+  cursor: pointer;
 }
 .myJobs .container .banner .card .button_wrapper .delete_btn {
   background: #d9534f;
@@ -1230,16 +1233,17 @@ nav .menu {
 }
 nav .menu button {
   height: fit-content;
+  border: 1px solid;
+  border-color: f1f3f6;
   padding: 7px;
-  border-radius: 30px ;
   color: #f1f3f6;
   background: transparent;
   font-size: 15px;
-  font-weight: 300;
+  font-weight: 500;
 }
 nav .menu button:hover {
   color: #f1f3f6;
-  background: #184235;
+  background: #2d5649;
   transition: all 0.3s;
   cursor: pointer;
   font-weight: 500;

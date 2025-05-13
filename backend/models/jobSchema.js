@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const jobSchema = new mongoose.Schema({
-  companyname:{
+  companyName:{
     type: String,
     required: [true, "Please provide a Name oF the Company."],
     minLength: [3, "Company name must contain at least 3 Characters!"],
@@ -26,7 +26,7 @@ const jobSchema = new mongoose.Schema({
   vacancy: {
     type: Number,
     required: [true, "Please provide No oF Vacant Seats."],
-    minLength:[1000000, "Vacantposition seats should be at least 1 "]
+    minLength:[1, "Vacantposition seats should be at least 1 "]
   },
   qualification: {
     type: String,
@@ -36,14 +36,14 @@ const jobSchema = new mongoose.Schema({
   location: {
     type: String,
     required: [true, "Please provide location."],
-    minLength: [20, "Location must contian at least 20 characters!"],
+    minLength: [10, "Location must contian at least 20 characters!"],
   },
   fixedSalary: {
     type: String,
     minLength: [4, "Salary must contain at least 4 digits/ any word that contain 4 words"],
     maxLength: [9, "Salary cannot exceed 9 digits"],
   },
-  timeperiod:{
+  timePeriod:{
     type: String,
     required:[true,"Enter time period of the job"],
   },

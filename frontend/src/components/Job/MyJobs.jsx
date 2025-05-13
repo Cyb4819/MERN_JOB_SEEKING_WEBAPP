@@ -113,41 +113,6 @@ const MyJobs = () => {
                           />
                         </div>
                         <div>
-                          {" "}
-                          <span>Country:</span>
-                          <input
-                            type="text"
-                            disabled={
-                              editingMode !== element._id ? true : false
-                            }
-                            value={element.country}
-                            onChange={(e) =>
-                              handleInputChange(
-                                element._id,
-                                "country",
-                                e.target.value
-                              )
-                            }
-                          />
-                        </div>
-                        <div>
-                          <span>City:</span>
-                          <input
-                            type="text"
-                            disabled={
-                              editingMode !== element._id ? true : false
-                            }
-                            value={element.city}
-                            onChange={(e) =>
-                              handleInputChange(
-                                element._id,
-                                "city",
-                                e.target.value
-                              )
-                            }
-                          />
-                        </div>
-                        <div>
                           <span>Category:</span>
                           <select
                             value={element.category}
@@ -266,8 +231,59 @@ const MyJobs = () => {
                             <option value={false}>FALSE</option>
                           </select>
                         </div>
+                        <div>
+                          <span>Time Period:</span>
+                          <input
+                            type="text"
+                            disabled={
+                              editingMode !== element._id ? true : false
+                            }
+                            value={element.timePeriod}
+                            onChange={(e) =>
+                              handleInputChange(
+                                element._id,
+                                "timePeriod",
+                                e.target.value
+                              )
+                            }
+                          />
+                        </div>
+                        <div>
+                          <span>Vacancies:</span>
+                          <input
+                            type="text"
+                            disabled={
+                              editingMode !== element._id ? true : false
+                            }
+                            value={element.vacancy}
+                            onChange={(e) =>
+                              handleInputChange(
+                                element._id,
+                                "vacancy",
+                                e.target.value
+                              )
+                            }
+                          />
+                        </div>
                       </div>
                       <div className="long_field">
+                        <div>
+                          <span>Qualification:</span>{" "}
+                          <textarea
+                            rows={5}
+                            value={element.qualification}
+                            disabled={
+                              editingMode !== element._id ? true : false
+                            }
+                            onChange={(e) =>
+                              handleInputChange(
+                                element._id,
+                                "qualification",
+                                e.target.value
+                              )
+                            }
+                          />
+                        </div>
                         <div>
                           <span>Description:</span>{" "}
                           <textarea

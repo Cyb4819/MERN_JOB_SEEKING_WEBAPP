@@ -18,18 +18,20 @@ export const postJob = catchAsyncErrors(async (req, res, next) => {
     );
   }
   const {
+    companyName,
     title,
     description,
     category,
-    country,
-    city,
+    vacancy,
+    qualification,
     location,
     fixedSalary,
+    timePeriod,
     salaryFrom,
     salaryTo,
   } = req.body;
 
-  if (!title || !description || !category || !country || !city || !location) {
+  if (!companyName || !title || !description || !category || !location || !timePeriod || !qualification) {
     return next(new ErrorHandler("Please provide full job details.", 400));
   }
 
@@ -49,13 +51,15 @@ export const postJob = catchAsyncErrors(async (req, res, next) => {
   }
   const postedBy = req.user._id;
   const job = await Job.create({
+    companyName,
     title,
     description,
     category,
-    country,
-    city,
+    vacancy,
+    qualification,
     location,
     fixedSalary,
+    timePeriod,
     salaryFrom,
     salaryTo,
     postedBy,

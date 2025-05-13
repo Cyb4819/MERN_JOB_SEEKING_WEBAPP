@@ -4,14 +4,16 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Context } from "../../main";
 const PostJob = () => {
+  const [companyName, setCompanyName] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
-  const [country, setCountry] = useState("");
-  const [city, setCity] = useState("");
+  const [vacancy, setVacancy] = useState();
+  const [qualification, setQualification] = useState("");
   const [location, setLocation] = useState("");
-  const [salaryFrom, setSalaryFrom] = useState("");
-  const [salaryTo, setSalaryTo] = useState("");
+  const [timePeriod, setTimePeriod] = useState("")
+  const [salaryFrom, setSalaryFrom] = useState();
+  const [salaryTo, setSalaryTo] = useState();
   const [fixedSalary, setFixedSalary] = useState("");
   const [salaryType, setSalaryType] = useState("default");
 
@@ -34,24 +36,28 @@ const PostJob = () => {
         "http://localhost:3000/api/v1/job/post",
         fixedSalary.length >= 4
           ? {
-              title,
-              description,
-              category,
-              country,
-              city,
-              location,
-              fixedSalary,
-            }
+            companyName,
+            title,
+            description,
+            category,
+            vacancy,
+            qualification,
+            location,
+            timePeriod,
+            fixedSalary,
+          }
           : {
-              title,
-              description,
-              category,
-              country,
-              city,
-              location,
-              salaryFrom,
-              salaryTo,
-            },
+            companyName,
+            title,
+            description,
+            category,
+            vacancy,
+            qualification,
+            location,
+            timePeriod,
+            salaryFrom,
+            salaryTo,
+          },
         {
           withCredentials: true,
           headers: {
@@ -81,10 +87,19 @@ const PostJob = () => {
             <div className="wrapper">
               <input
                 type="text"
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+                placeholder="Company Name"
+              />
+              <input
+                type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Job Title"
               />
+
+            </div>
+            <div className="wrapper">
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
@@ -113,19 +128,11 @@ const PostJob = () => {
                 </option>
                 <option value="Data Entry Operator">Data Entry Operator</option>
               </select>
-            </div>
-            <div className="wrapper">
               <input
                 type="text"
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-                placeholder="Country"
-              />
-              <input
-                type="text"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                placeholder="City"
+                value={vacancy}
+                onChange={(e) => setVacancy(e.target.value)}
+                placeholder="Vacancy"
               />
             </div>
             <input
@@ -134,7 +141,21 @@ const PostJob = () => {
               onChange={(e) => setLocation(e.target.value)}
               placeholder="Location"
             />
+            <input
+              type="text"
+              value={qualification}
+              onChange={(e) => setQualification(e.target.value)}
+              placeholder="Qualifications"
+            />
+
+
             <div className="salary_wrapper">
+              <input
+                type="text"
+                value={timePeriod}
+                onChange={(e) => setTimePeriod(e.target.value)}
+                placeholder="Time Period"
+              />
               <select
                 value={salaryType}
                 onChange={(e) => setSalaryType(e.target.value)}
