@@ -54,4 +54,4 @@ npm run dev
 
 - Make sure MongoDB is running locally or provide a remote connection string in your `.env` file.
 
-## Further instructions for feature and UI integration will be added as the project develops.
+Further instructions for feature and UI integration will be added as the project develops.
