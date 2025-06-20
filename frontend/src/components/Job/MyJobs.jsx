@@ -95,6 +95,23 @@ const MyJobs = () => {
                   <div className="card" key={element._id}>
                     <div className="content">
                       <div className="short_fields">
+                                                <div>
+                          <span>Company Name:</span>
+                          <input
+                            type="text"
+                            disabled={
+                              editingMode !== element._id ? true : false
+                            }
+                            value={element.companyName}
+                            onChange={(e) =>
+                              handleInputChange(
+                                element._id,
+                                "companyName",
+                                e.target.value
+                              )
+                            }
+                          />
+                        </div>
                         <div>
                           <span>Title:</span>
                           <input

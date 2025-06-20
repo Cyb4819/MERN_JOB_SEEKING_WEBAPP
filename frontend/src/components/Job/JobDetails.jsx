@@ -69,7 +69,7 @@ const JobDetails = () => {
               <div className="job-detail-logo-desc">
                 <div>
                   <i class="fa-solid fa-building"></i>
-                  <span>  google{job.companyname}</span>
+                  <span>  {job.companyName}</span>
                 </div>
                 <div>
                   <i class="fa-solid fa-location-dot"></i>
