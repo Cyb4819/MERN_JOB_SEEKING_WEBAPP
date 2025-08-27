@@ -13,6 +13,13 @@ export const useChatStore = create((set, get) => ({
   selectedUser: null,
   isUsersLoading: false,
   isMessagesLoading: false,
+  searchResults: [],
+
+  searchUsers: async (query) => {
+    if (!query) return set({ searchResults: [] });
+    const res = await axiosInstance.get(`/message/search?q=${encodeURIComponent(query)}`);
+    set({ searchResults: res.data });
+  },
 
   getUsers: async () => {
     set({ isUsersLoading: true });

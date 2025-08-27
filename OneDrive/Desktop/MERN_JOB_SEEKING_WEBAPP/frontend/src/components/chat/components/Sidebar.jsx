@@ -5,14 +5,34 @@ import SidebarSkeleton from "./skeletons/SidebarSkeleton";
 import { Users } from "lucide-react";
 
 const Sidebar = () => {
-  const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } = useChatStore();
-
+  const {
+    getUsers,
+    users,
+    searchResults,
+    searchUsers,
+    selectedUser,
+    setSelectedUser,
+    isUsersLoading,
+  } = useChatStore();
   const { onlineUsers } = useAuthStore();
+  const [search, setSearch] = useState("");
+  const [showSearch, setShowSearch] = useState(false);
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
   useEffect(() => {
     getUsers();
   }, [getUsers]);
+
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setSearch(value);
+    if (value.trim()) {
+      searchUsers(value);
+      setShowSearch(true);
+    } else {
+      setShowSearch(false);
+    }
+  };
 
   const filteredUsers = showOnlineOnly
     ? users.filter((user) => onlineUsers.includes(user._id))
@@ -38,11 +58,40 @@ const Sidebar = () => {
             />
             <span className="text-sm">Show online only</span>
           </label>
-          <span className="text-xs text-zinc-500">({onlineUsers.length - 1} online)</span>
+          <span className="text-xs text-zinc-500">
+            ({onlineUsers.length - 1} online)
+          </span>
         </div>
       </div>
 
       <div className="overflow-y-auto w-full py-3">
+        <div className="px-3">
+          <input
+            value={search}
+            onChange={handleSearch}
+            placeholder="Search users..."
+            className="input input-bordered w-full"
+          />
+        </div>
+
+        {showSearch && searchResults.length > 0 && (
+          <div className="py-2 px-3 bg-base-100 border-b border-base-300">
+            {searchResults.map((user) => (
+              <button
+                key={user._id}
+                onClick={() => {
+                  setSelectedUser(user);
+                  setShowSearch(false);
+                  setSearch("");
+                }}
+                className="w-full text-left p-2 rounded-md hover:bg-base-200 transition-colors"
+              >
+                {user.name}
+              </button>
+            ))}
+          </div>
+        )}
+
         {filteredUsers.map((user) => (
           <button
             key={user._id}
