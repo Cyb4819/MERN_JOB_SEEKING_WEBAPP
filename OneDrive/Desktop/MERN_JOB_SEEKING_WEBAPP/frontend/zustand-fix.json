@@ -1,8 +1,0 @@
-{
-  "name": "zustand-fix",
-  "version": "1.0.0",
-  "description": "Ensure zustand is installed for chat integration.",
-  "dependencies": {
-    "zustand": "^4.5.2"
-  }
-}
