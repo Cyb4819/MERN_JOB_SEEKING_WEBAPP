@@ -6,31 +6,26 @@ const ChatHeader = () => {
   const { selectedUser, setSelectedUser } = useChatStore();
   const { onlineUsers } = useAuthStore();
 
+  const displayName = selectedUser
+    ? (selectedUser.fullName || selectedUser.name || selectedUser.username || "Unknown")
+    : "";
+
   return (
-    <div className="p-2.5 border-b border-base-300">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          {/* Avatar */}
-          <div className="avatar">
-            <div className="size-10 rounded-full relative">
-              <img src={selectedUser.profilePic || "/avatar.png"} alt={selectedUser.name} />
-            </div>
-          </div>
-
-          {/* User info */}
-          <div>
-            <h3 className="font-medium">{selectedUser.name}</h3>
-            <p className="text-sm text-base-content/70">
-              {onlineUsers.includes(selectedUser._id) ? "Online" : "Offline"}
-            </p>
-          </div>
+    <div className="chat-header">
+      <div className="chat-header-info">
+        <div className="chat-header-avatar">
+          <img src={(selectedUser && selectedUser.profilePic) || "/avatar.png"} alt={displayName} />
         </div>
-
-        {/* Close button */}
-        <button onClick={() => setSelectedUser(null)}>
-          <X />
-        </button>
+        <div className="chat-header-details">
+          <h3>{displayName || "Select a contact"}</h3>
+          <p className="chat-header-status">
+            {selectedUser ? (onlineUsers.includes(selectedUser._id) ? "Online" : "Offline") : ""}
+          </p>
+        </div>
       </div>
+      <button className="chat-close-btn" onClick={() => setSelectedUser(null)}>
+        <X size={24} />
+      </button>
     </div>
   );
 };

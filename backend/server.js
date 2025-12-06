@@ -1,7 +1,7 @@
 import app from "./app.js";
 import cloudinary from "cloudinary";
-import http from "http";
 import { Server } from "socket.io";
+import { createServer } from "http";
 
 cloudinary.v2.config({
   cloud_name: process.env.CLOUDINARY_CLIENT_NAME,
@@ -9,47 +9,51 @@ cloudinary.v2.config({
   api_secret: process.env.CLOUDINARY_CLIENT_SECRET,
 });
 
-const server = http.createServer(app);
-const io = new Server(server, {
+// Set the port
+const PORT = process.env.PORT || 3000;
+
+const httpServer = createServer(app);
+export const io = new Server(httpServer, {
   cors: {
-    origin: [process.env.FRONTEND_URL || "http://localhost:5173"],
-    credentials: true,
-  },
+    origin: "*",
+    credentials: true
+  }
+});
+
+app.use((req, res, next) => {
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self'; connect-src 'self' http://localhost:3000; script-src 'self'; style-src 'self'"
+  );
+  next();
 });
 
 const userSocketMap = {};
 export const getReceiverSocketId = (userId) => userSocketMap[userId];
 
 io.on("connection", (socket) => {
-  const userId = socket.handshake.query.userId;
-  userSocketMap[userId] = socket.id;
-  if (userId) userSocketMap[userId] = socket.id;
+  console.log("New client connected:", socket.id);
 
-  // Emit online users on new connection
-  io.emit("getOnlineUsers", Object.keys(userSocketMap));
-
-  // Handle new message
-  socket.on("newMessage", (message) => {
-    io.emit("newMessage", message); // Broadcast to all users
+  socket.on("welcome", (message) => {
+    console.log("Received 'welcome' event from client:", message);
   });
 
-  // Handle disconnect
+  socket.emit("welcome", "message sent from server");
+
+  socket.on("join", ({ roomId, user }) => {
+    socket.join(roomId);
+    console.log(`${user} joined room: ${roomId}`);
+  });
+
+  socket.on("sendMessage", ({ room, sender, message }) => {
+    io.to(room).emit("recieveMessage", { sender, message });
+  });
+
   socket.on("disconnect", () => {
-    delete userSocketMap[userId];
-    io.emit("getOnlineUsers", Object.keys(userSocketMap));
+    console.log("Client disconnected:", socket.id);
   });
 });
 
-export { io };
-
-// Optional: handle POST messages via HTTP
-app.post("/message/send", (req, res) => {
-  const message = req.body;
-  io.emit("newMessage", message);
-  res.json(message);
-});
-
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`Server running at port ${PORT}`);
+httpServer.listen(PORT, () => {
+  console.log(`IO Server running at port ${PORT}`);
 });

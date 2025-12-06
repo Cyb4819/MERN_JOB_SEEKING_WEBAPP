@@ -1,4 +1,5 @@
-import User from "../models/user.model.js";
+import { User } from "../models/userSchema.js";
+import UserModel from "../models/user.model.js";
 import Message from "../models/message.model.js";
 import cloudinary from "cloudinary";
 import { getReceiverSocketId, io } from "../server.js";
@@ -47,7 +48,20 @@ async function getUsersForSidebar(req, res) {
   try {
     const currentUserId = req.user._id;
 
-    const users = await User.find({ _id: { $ne: currentUserId } }).select("name email");
+    // Try to get users from the main User model (userSchema.js)
+    let users = await User.find({ _id: { $ne: currentUserId } }).select("name email profilePic");
+
+    // If no users found, try the chat-specific User model (user.model.js)
+    if (users.length === 0) {
+      users = await UserModel.find({ _id: { $ne: currentUserId } }).select("fullName email profilePic");
+      // Map fullName to name for consistency
+      users = users.map(user => ({
+        _id: user._id,
+        name: user.fullName,
+        email: user.email,
+        profilePic: user.profilePic
+      }));
+    }
 
     res.status(200).json(users);
   } catch (error) {
@@ -122,11 +136,73 @@ const messageController = {
   getUsersForSidebar,
   getMessages,
   sendMessage,
+  editMessage,
+  deleteMessage,
 };
+
+// Edit message
+async function editMessage(req, res) {
+  try {
+    const { messageId } = req.params;
+    const { text } = req.body;
+    const userId = req.user._id;
+
+    const message = await Message.findById(messageId);
+    if (!message) return res.status(404).json({ error: "Message not found" });
+
+    // Only allow the sender to edit
+    if (message.senderId.toString() !== userId.toString()) {
+      return res.status(403).json({ error: "Unauthorized" });
+    }
+
+    message.text = text;
+    await message.save();
+
+    // Emit socket event for real-time update
+    const receiverSocketId = getReceiverSocketId(message.receiverId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("messageEdited", message);
+    }
+
+    res.status(200).json(message);
+  } catch (error) {
+    console.error("Error in editMessage:", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+// Delete message
+async function deleteMessage(req, res) {
+  try {
+    const { messageId } = req.params;
+    const userId = req.user._id;
+
+    const message = await Message.findById(messageId);
+    if (!message) return res.status(404).json({ error: "Message not found" });
+
+    // Only allow the sender to delete
+    if (message.senderId.toString() !== userId.toString()) {
+      return res.status(403).json({ error: "Unauthorized" });
+    }
+
+    await Message.findByIdAndDelete(messageId);
+
+    // Emit socket event for real-time deletion
+    const receiverSocketId = getReceiverSocketId(message.receiverId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("messageDeleted", { messageId });
+    }
+
+    res.status(200).json({ message: "Message deleted successfully" });
+  } catch (error) {
+    console.error("Error in deleteMessage:", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
 
 export const getUsers = async (req, res) => {
   try {
-    const users = await User.find().select('name email');
+    const users = await User.find().select('name email profilePic');
     res.status(200).json(users);
   } catch (error) {
     console.error(error);

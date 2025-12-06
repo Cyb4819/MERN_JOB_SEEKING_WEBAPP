@@ -5,6 +5,7 @@ import { useAuthStore } from "./useAuthStore.js";
 import { io } from "socket.io-client";
 import axios from 'axios';
 
+// Ensure the socket connection is established correctly
 const socket = io("http://localhost:3000");
 
 export const useChatStore = create((set, get) => ({
@@ -39,31 +40,64 @@ export const useChatStore = create((set, get) => ({
   getMessages: async (userId) => {
     set({ isMessagesLoading: true });
     try {
-      const res = await axiosInstance.get(`/message/${userId}`);
+      const res = await axiosInstance.get(`/message/messages?receiverId=${userId}`);
       console.log("[getMessages] response:", res.data);
       set({ messages: res.data });
     } catch (error) {
-      toast.error(error.response?.data?.message || error.message);
       console.error("[getMessages] error:", error);
+      toast.error(error.response?.data?.message || "Something went wrong!");
     } finally {
       set({ isMessagesLoading: false });
     }
   },
+
   sendMessage: async (messageData) => {
     const { selectedUser, messages } = get();
     try {
       const res = await axiosInstance.post(`/message/send/${selectedUser._id}`, messageData);
       set({ messages: [...messages, res.data] });
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Failed to send message");
+    }
+  },
+
+  editMessage: async (messageId, text) => {
+    const { messages } = get();
+    try {
+      const res = await axiosInstance.put(`/message/edit/${messageId}`, { text });
+      const updated = messages.map((msg) =>
+        msg._id === messageId ? res.data : msg
+      );
+      set({ messages: updated });
+      toast.success("Message updated");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to edit message");
+    }
+  },
+
+  deleteMessage: async (messageId) => {
+    const { messages } = get();
+    try {
+      await axiosInstance.delete(`/message/delete/${messageId}`);
+      set({ messages: messages.filter((msg) => msg._id !== messageId) });
+      toast.success("Message deleted");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to delete message");
     }
   },
 
   subscribeToMessages: () => {
     const { selectedUser } = get();
-    if (!selectedUser) return;
+    if (!selectedUser) {
+      console.error("No selected user, can't subscribe to messages.");
+      return;
+    }
 
     const socket = useAuthStore.getState().socket;
+    if (!socket) {
+      console.error("Socket is not initialized!");
+      return;
+    }
 
     socket.on("newMessage", (newMessage) => {
       const isMessageSentFromSelectedUser = newMessage.senderId === selectedUser._id;
@@ -77,6 +111,8 @@ export const useChatStore = create((set, get) => ({
 
   unsubscribeFromMessages: () => {
     const socket = useAuthStore.getState().socket;
+    if (!socket) return;
+
     socket.off("newMessage");
   },
 

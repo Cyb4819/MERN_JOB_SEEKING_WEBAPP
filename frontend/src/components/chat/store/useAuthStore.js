@@ -10,7 +10,6 @@ export const useAuthStore = create((set, get) => ({
   isSigningUp: false,
   isLoggingIn: false,
   isUpdatingProfile: false,
-  isCheckingAuth: true,
   onlineUsers: [],
   socket: null,
 
@@ -18,13 +17,13 @@ export const useAuthStore = create((set, get) => ({
     try {
       // Use main app's user endpoint
       const res = await axiosInstance.get("/user/getuser");
+          console.log("RES.DATA.USER:", res.data?.user);
+
       set({ authUser: res.data.user });
       get().connectSocket();
     } catch (error) {
       console.log("Error in checkAuth:", error);
       set({ authUser: null });
-    } finally {
-      set({ isCheckingAuth: false });
     }
   },
 

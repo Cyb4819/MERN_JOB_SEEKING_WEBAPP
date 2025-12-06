@@ -13,10 +13,6 @@ import fileUpload from "express-fileupload";
 const app = express();
 config({ path: "./config/config.env" });
 
-import mongoose from 'mongoose';
-
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
-
 app.use(
   cors({
     origin: [process.env.FRONTEND_URL],

@@ -17,10 +17,15 @@ import MyApplications from "./components/Application/MyApplications";
 import PostJob from "./components/Job/PostJob";
 import NotFound from "./components/NotFound/NotFound";
 import MyJobs from "./components/Job/MyJobs";
+import { useAuthStore } from "./components/chat/store/useAuthStore.js";
 
 import Chat from "./Chat.jsx";
 const App = () => {
   const { isAuthorized, setIsAuthorized, setUser } = useContext(Context);
+    const checkAuth = useAuthStore((state) => state.checkAuth);
+useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
   useEffect(() => {
     const fetchUser = async () => {
       try {

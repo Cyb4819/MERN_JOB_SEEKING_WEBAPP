@@ -15,5 +15,9 @@ router.get("/all-users", isAuthenticated, getUsers);
 router.get("/messages", isAuthenticated, messageController.getMessages);
 // Send a message
 router.post("/send/:id", isAuthenticated, messageController.sendMessage);
+// Edit a message
+router.put("/edit/:messageId", isAuthenticated, messageController.editMessage);
+// Delete a message
+router.delete("/delete/:messageId", isAuthenticated, messageController.deleteMessage);
 
 export default router;

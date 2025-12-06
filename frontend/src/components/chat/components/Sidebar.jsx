@@ -1,136 +1,86 @@
 import { useEffect, useState } from "react";
 import { useChatStore } from "../store/useChatStore";
-import { useAuthStore } from "../store/useAuthStore";
 import SidebarSkeleton from "./skeletons/SidebarSkeleton";
-import { Users } from "lucide-react";
+import { Users, Search } from "lucide-react";
 
 const Sidebar = () => {
-  const {
-    getUsers,
-    users,
-    searchResults,
-    searchUsers,
-    selectedUser,
-    setSelectedUser,
-    isUsersLoading,
-  } = useChatStore();
-  const { onlineUsers } = useAuthStore();
+  const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading, searchUsers, searchResults } = useChatStore();
   const [search, setSearch] = useState("");
-  const [showSearch, setShowSearch] = useState(false);
-  const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
   useEffect(() => {
     getUsers();
   }, [getUsers]);
 
-  const handleSearch = (e) => {
-    const value = e.target.value;
-    setSearch(value);
-    if (value.trim()) {
-      searchUsers(value);
-      setShowSearch(true);
-    } else {
-      setShowSearch(false);
-    }
-  };
+  // If there's an active search query, prefer server-side results (if any),
+  // otherwise fall back to local filtering of the `users` list.
+  const filteredUsers = (search.trim().length > 0 ? (searchResults || []) : users).filter((user) => {
+    const name = (user.fullName || user.name || user.username || "").toLowerCase();
+    return name.includes(search.toLowerCase());
+  });
 
-  const filteredUsers = showOnlineOnly
-    ? users.filter((user) => onlineUsers.includes(user._id))
-    : users;
+  // Debounced remote search: call `searchUsers` 300ms after the user stops typing.
+  // When the search is cleared, call `searchUsers('')` to reset server-side results.
+  useEffect(() => {
+    if (search.trim().length === 0) {
+      // clear remote results
+      searchUsers("").catch((err) => console.error("searchUsers clear failed:", err));
+      return;
+    }
+
+    const t = setTimeout(() => {
+      searchUsers(search).catch((err) => console.error("searchUsers failed:", err));
+    }, 300);
+    return () => clearTimeout(t);
+  }, [search, searchUsers]);
 
   if (isUsersLoading) return <SidebarSkeleton />;
 
   return (
-    <aside className="h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
-      <div className="border-b border-base-300 w-full p-5">
-        <div className="flex items-center gap-2">
-          <Users className="size-6" />
-          <span className="font-medium hidden lg:block">Contacts</span>
-        </div>
-        {/* TODO: Online filter toggle */}
-        <div className="mt-3 hidden lg:flex items-center gap-2">
-          <label className="cursor-pointer flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={showOnlineOnly}
-              onChange={(e) => setShowOnlineOnly(e.target.checked)}
-              className="checkbox checkbox-sm"
-            />
-            <span className="text-sm">Show online only</span>
-          </label>
-          <span className="text-xs text-zinc-500">
-            ({onlineUsers.length - 1} online)
-          </span>
+    <>
+      <div className="chat-sidebar-header">
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <Users size={20} />
+          <h2>Contacts</h2>
         </div>
       </div>
 
-      <div className="overflow-y-auto w-full py-3">
-        <div className="px-3">
-          <input
-            value={search}
-            onChange={handleSearch}
-            placeholder="Search users..."
-            className="input input-bordered w-full"
-          />
-        </div>
+      {/* 🔍 Search Bar */}
+      <div className="chat-sidebar-search">
+        <Search size={16} className="search-icon" />
+        <input
+          type="text"
+          placeholder="Search users..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
 
-        {showSearch && searchResults.length > 0 && (
-          <div className="py-2 px-3 bg-base-100 border-b border-base-300">
-            {searchResults.map((user) => (
-              <button
-                key={user._id}
-                onClick={() => {
-                  setSelectedUser(user);
-                  setShowSearch(false);
-                  setSearch("");
-                }}
-                className="w-full text-left p-2 rounded-md hover:bg-base-200 transition-colors"
-              >
-                {user.name}
-              </button>
-            ))}
-          </div>
-        )}
-
+      <ul className="chat-users-list">
         {filteredUsers.map((user) => (
-          <button
+          <li
             key={user._id}
+            className={`chat-user-item ${selectedUser?._id === user._id ? "active" : ""}`}
             onClick={() => setSelectedUser(user)}
-            className={`
-              w-full p-3 flex items-center gap-3
-              hover:bg-base-300 transition-colors
-              ${selectedUser?._id === user._id ? "bg-base-300 ring-1 ring-base-300" : ""}
-            `}
           >
-            <div className="relative mx-auto lg:mx-0">
-              <img
-                src={user.profilePic || "/avatar.png"}
-                alt={user.name}
-                className="size-12 object-cover rounded-full"
-              />
-              {onlineUsers.includes(user._id) && (
-                <span
-                  className="absolute bottom-0 right-0 size-3 bg-green-500 
-                  rounded-full ring-2 ring-zinc-900"
-                />
-              )}
+            <div className="chat-user-avatar">
+              <img src={user.profilePic || "/avatar.png"} alt={user.fullName} />
             </div>
-
-            {/* User info - only visible on larger screens */}
-            <div className="hidden lg:block text-left min-w-0">
-              <div className="font-medium truncate">{user.name}</div>
-              <div className="text-sm text-zinc-400">
-                {onlineUsers.includes(user._id) ? "Online" : "Offline"}
-              </div>
+            <div className="chat-user-info">
+              <p className="chat-user-name">
+                {user.fullName || user.name || user.username}
+              </p>
             </div>
-          </button>
+          </li>
         ))}
 
         {filteredUsers.length === 0 && (
-          <div className="text-center text-zinc-500 py-4">No online users</div>
+          <div style={{ textAlign: "center", color: "#868e96", padding: "1rem" }}>
+            No users found
+          </div>
         )}
-      </div>
-    </aside>
+      </ul>
+    </>
   );
 };
+
 export default Sidebar;
