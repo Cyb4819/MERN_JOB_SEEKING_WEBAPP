@@ -18,6 +18,7 @@ The goal of this project is to provide a modern, user-friendly platform for job 
 - Responsive, modern UI with clear navigation
 - Secure backend with JWT-based authentication
 - Resume upload and application tracking
+- Real-time chat system supporting text and image messaging
 
 ## Tools & Technologies Used
 
