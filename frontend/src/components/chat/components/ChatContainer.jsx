@@ -23,6 +23,7 @@ const ChatContainer = () => {
   const messageEndRef = useRef(null);
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState("");
+  const [openImage, setOpenImage] = useState(null);
 
   if (!authUser) {
     return (
@@ -85,6 +86,10 @@ const ChatContainer = () => {
               : message.senderId || "";
           const isOwn = senderId === authUser._id;
           const isEditing = editingId === message._id;
+          const createdAtTs = message.createdAt ? new Date(message.createdAt).getTime() : 0;
+          const TWENTY_MIN = 20 * 60 * 1000;
+          const canEdit = isOwn && (Date.now() - createdAtTs <= TWENTY_MIN);
+          const canDelete = isOwn && !message.readAt;
 
           const handleEditClick = () => {
             setEditingId(message._id);
@@ -160,7 +165,13 @@ const ChatContainer = () => {
                   <>
                     <div className={`message-bubble ${isOwn ? "own" : "other"}`}>
                       {message.image && (
-                        <img src={message.image} alt="Attachment" className="message-image" />
+                        <img
+                          src={message.image}
+                          alt="Attachment"
+                          className="message-image"
+                          style={{ cursor: "pointer" }}
+                          onClick={() => setOpenImage(message.image)}
+                        />
                       )}
 
                       {/* robust text fallback: try common fields */}
@@ -172,7 +183,7 @@ const ChatContainer = () => {
                           return <p style={{ margin: 0, color: isOwn ? "#fff" : "#111" }}>{text}</p>;
                         }
                         // if no text and no image, show small placeholder to diagnose
-                        return <p style={{ margin: 0, color: isOwn ? "#fff" : "#111" }}>[no text]</p>;
+                    
                       })()}
                     </div>
                     <div className="message-time">{formatMessageTime(message.createdAt)}</div>
@@ -188,29 +199,33 @@ const ChatContainer = () => {
                       >
                         <button
                           onClick={handleEditClick}
+                          disabled={!canEdit}
                           style={{
                             background: "none",
                             border: "none",
-                            cursor: "pointer",
+                            cursor: canEdit ? "pointer" : "not-allowed",
                             padding: 0,
                             display: "flex",
                             alignItems: "center",
+                            opacity: canEdit ? 0.9 : 0.4,
                           }}
-                          title="Edit"
+                          title={canEdit ? "Edit" : "Edit (disabled after 20 minutes)"}
                         >
                           <Edit2 size={16} color="#667eea" />
                         </button>
                         <button
                           onClick={handleDeleteClick}
+                          disabled={!canDelete}
                           style={{
                             background: "none",
                             border: "none",
-                            cursor: "pointer",
+                            cursor: canDelete ? "pointer" : "not-allowed",
                             padding: 0,
                             display: "flex",
                             alignItems: "center",
+                            opacity: canDelete ? 0.9 : 0.4,
                           }}
-                          title="Delete"
+                          title={canDelete ? "Delete" : "Cannot delete after message was read"}
                         >
                           <Trash2 size={16} color="#ff6b6b" />
                         </button>
@@ -225,6 +240,20 @@ const ChatContainer = () => {
       </div>
 
       <MessageInput />
+      {openImage && (
+        <div className="image-lightbox-overlay" onClick={() => setOpenImage(null)}>
+          <div className="image-lightbox-content" onClick={(e) => e.stopPropagation()}>
+            <button
+              className="image-lightbox-close"
+              onClick={() => setOpenImage(null)}
+              aria-label="Close image"
+            >
+              ×
+            </button>
+            <img src={openImage} alt="Zoomed" />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

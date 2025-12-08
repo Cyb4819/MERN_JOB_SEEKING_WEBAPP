@@ -255,6 +255,7 @@
   gap: 0;
   margin-block: 0;
   align-items: flex-end;
+  overflow: visible;
 }
 
 .message-group.own {
@@ -591,4 +592,46 @@
   .chat-user-name {
     font-size: 0.85rem;
   }
+}
+/* Image Lightbox */
+.image-lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1rem;
+}
+.image-lightbox-content {
+  position: relative;
+  max-width: 95%;
+  max-height: 95%;
+}
+.image-lightbox-content img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.image-lightbox-close {
+  position: absolute;
+  right: -10px;
+  top: -10px;
+  background: #111;
+  color: #fff;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.image-lightbox-close:hover {
+  background: #333;
 }

@@ -76,7 +76,8 @@ async function getMessages(req, res) {
     const currentUserId = req.user._id;
     const receiverId = req.query.receiverId;
 
-    const messages = await Message.find({
+    // fetch messages for the conversation
+    let messages = await Message.find({
       $or: [
         { senderId: currentUserId, receiverId },
         { senderId: receiverId, receiverId: currentUserId },
@@ -85,6 +86,31 @@ async function getMessages(req, res) {
       .sort({ createdAt: 1 })
       .populate("senderId", "name email")
       .populate("receiverId", "name email");
+
+    // mark messages as read where the current user is the receiver and readAt is not set
+    try {
+      await Message.updateMany(
+        {
+          receiverId: currentUserId,
+          senderId: receiverId,
+          $or: [{ readAt: null }, { readAt: { $exists: false } }],
+        },
+        { $set: { readAt: new Date() } }
+      );
+
+      // re-fetch messages so returned data includes readAt
+      messages = await Message.find({
+        $or: [
+          { senderId: currentUserId, receiverId },
+          { senderId: receiverId, receiverId: currentUserId },
+        ],
+      })
+        .sort({ createdAt: 1 })
+        .populate("senderId", "name email")
+        .populate("receiverId", "name email");
+    } catch (uErr) {
+      console.error("Error updating readAt:", uErr.message);
+    }
 
     res.status(200).json(messages);
   } catch (error) {
@@ -155,6 +181,13 @@ async function editMessage(req, res) {
       return res.status(403).json({ error: "Unauthorized" });
     }
 
+    // Allow edits only within 20 minutes of sending
+    const TWENTY_MIN = 20 * 60 * 1000;
+    const createdAt = new Date(message.createdAt).getTime();
+    if (Date.now() - createdAt > TWENTY_MIN) {
+      return res.status(403).json({ error: "Edit window (20 minutes) has passed" });
+    }
+
     message.text = text;
     await message.save();
 
@@ -183,6 +216,11 @@ async function deleteMessage(req, res) {
     // Only allow the sender to delete
     if (message.senderId.toString() !== userId.toString()) {
       return res.status(403).json({ error: "Unauthorized" });
+    }
+
+    // Prevent deletion after the other side has read the message
+    if (message.readAt) {
+      return res.status(403).json({ error: "Cannot delete message after it has been read" });
     }
 
     await Message.findByIdAndDelete(messageId);

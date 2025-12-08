@@ -22,13 +22,16 @@ app.use(
 );
 
 app.use(cookieParser());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Increase payload limits so base64 images can be received
+app.use(express.json({ limit: '1000mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1000mb' }));
 
 app.use(
   fileUpload({
     useTempFiles: true,
     tempFileDir: "/tmp/",
+    limits: { fileSize: 1 * 1024 * 1024 * 1024 }, // 1GB
+    abortOnLimit: true
   })
 );
 
