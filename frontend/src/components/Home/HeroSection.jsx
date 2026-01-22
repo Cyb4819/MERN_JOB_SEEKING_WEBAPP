@@ -1,29 +1,29 @@
-import React from "react";
 import { FaBuilding, FaSuitcase, FaUsers, FaUserPlus } from "react-icons/fa";
+import logo from "../../../public/jobharbor-logo.png";
 
 const HeroSection = () => {
   const details = [
     {
       id: 1,
-      title: "1,23,441",
+      title: "-----",
       subTitle: "Live Job",
       icon: <FaSuitcase />,
     },
     {
       id: 2,
-      title: "91220",
+      title: "----",
       subTitle: "Companies",
       icon: <FaBuilding />,
     },
     {
       id: 3,
-      title: "2,34,200",
+      title: "----",
       subTitle: "Job Seekers",
       icon: <FaUsers />,
     },
     {
       id: 4,
-      title: "1,03,761",
+      title: "----",
       subTitle: "Employers",
       icon: <FaUserPlus />,
     },
@@ -36,13 +36,13 @@ const HeroSection = () => {
             <h1>Find a job that suits</h1>
             <h1>your interests and skills</h1>
             <p>
-            Job search platform matching candidates with ideal roles 
-            and companies perfectly, sparking passion 
-            and aligning with interests, skills, and values!
+              Job search platform matching candidates with ideal roles
+              and companies perfectly, sparking passion
+              and aligning with interests, skills, and values!
             </p>
           </div>
           <div className="image">
-            <img src="/heroS.jpg" alt="hero" />
+            <img src={logo} alt="hero" />
           </div>
         </div>
         <div className="details">

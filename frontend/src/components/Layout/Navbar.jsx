@@ -29,9 +29,7 @@ const Navbar = () => {
   return (
     <nav className={isAuthorized ? "navbarShow" : "navbarHide"}>
       <div className="container">
-        <div className="logo">
-          <Link to={"/"}><img src="/JobZee-logos__white.png" alt="logo" /></Link>
-        </div>
+          <Link to={"/"}><p style={{marginBlock : "15px", color : "#f1f3f6"}}>JobHarbor</p></Link>
         <ul className={!show ? "menu" : "show-menu menu"}>
           <li>
             <Link to={"/"} onClick={() => setShow(false)}>
@@ -48,6 +46,11 @@ const Navbar = () => {
               {user && user.role === "Employer"
                 ? "APPLICANT'S APPLICATIONS"
                 : "MY APPLICATIONS"}
+            </Link>
+          </li>
+          <li>
+            <Link to={"/messaging"} onClick={() => setShow(false)}>
+              MESSAGING
             </Link>
           </li>
           {user && user.role === "Employer" ? (

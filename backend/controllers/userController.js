@@ -51,7 +51,6 @@ export const logout = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-
 export const getUser = catchAsyncErrors((req, res, next) => {
   const user = req.user;
   res.status(200).json({
